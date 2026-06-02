@@ -1,0 +1,143 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "81f9240e-a734-9ef0-4ea4-a65a7bb24aab",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "event_text": {
+              "value": {
+                "value": "@pipeline().parameters.event_text",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "item_id": {
+              "value": {
+                "value": "@pipeline().parameters.item_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "workspace_id": {
+              "value": {
+                "value": "@pipeline().parameters.workspace_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_OptimizationRecommendations",
+        "dependsOn": []
+      },
+      {
+        "type": "Office365Email",
+        "typeProperties": {
+          "body": "<p>@{activity('Lookup JSON').output.value[0].html}</p>",
+          "to": "YourEmail@SomeDomain.com",
+          "subject": "Test Alert"
+        },
+        "externalReferences": {
+          "connection": "888e9344-399d-4023-aacc-e23ad6c053b5"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Office365Email1",
+        "dependsOn": [
+          {
+            "activity": "Lookup JSON",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "JsonSource",
+            "formatSettings": {
+              "type": "JsonReadSettings"
+            },
+            "storeSettings": {
+              "type": "LakehouseReadSettings",
+              "recursive": true,
+              "enablePartitionDiscovery": false
+            }
+          },
+          "datasetSettings": {
+            "type": "Json",
+            "typeProperties": {
+              "location": {
+                "type": "LakehouseLocation",
+                "folderPath": "Optimizer",
+                "fileName": {
+                  "value": "@{json(activity('nb_OptimizationRecommendations').output.result.exitValue).file_name}",
+                  "type": "Expression"
+                }
+              }
+            },
+            "schema": {},
+            "linkedService": {
+              "name": "Demo_Lakehouse",
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "e1b1e4e7-04f9-b745-46b2-db00b02e4f37",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Files"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lookup JSON",
+        "dependsOn": [
+          {
+            "activity": "nb_OptimizationRecommendations",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "workspace_id": {
+        "type": "string"
+      },
+      "item_id": {
+        "type": "string"
+      },
+      "event_text": {
+        "type": "string"
+      }
+    }
+  }
+}
