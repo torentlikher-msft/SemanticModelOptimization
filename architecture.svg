@@ -43,7 +43,7 @@
   </defs>
 
   <!-- Title -->
-  <text x="40" y="42" class="title">DAXter — Architecture</text>
+  <text x="40" y="42" class="title">Semantic Model Optimization Recommendation Pipeline</text>
   <text x="40" y="62" class="subtitle">Self-healing observability loop for Power BI semantic models in Microsoft Fabric</text>
 
   <!-- Workspace container -->
