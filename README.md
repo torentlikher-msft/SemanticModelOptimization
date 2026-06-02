@@ -22,7 +22,7 @@ This project does not represent the views or recommendations of Microsoft. It is
 
 ## Architecture
 
-![DAXter architecture](docs/architecture.svg)
+![architecture](docs/architecture.svg)
 
 **Three lanes:**
 
