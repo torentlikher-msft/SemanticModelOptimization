@@ -22,7 +22,7 @@ This project does not represent the views or recommendations of Microsoft. It is
 
 ## Architecture
 
-![architecture](docs/architecture.svg)
+![architecture](./architecture.svg)
 
 **Three lanes:**
 
